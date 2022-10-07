@@ -701,7 +701,7 @@
       if (!elementDisplay[nodeName]) {
         element = document.createElement(nodeName);
         document.body.appendChild(element);
-        display = getComputedStyle(element, '').getPropertyValue("display");
+        display = window.getComputedStyle(element, '').getPropertyValue("display");
         element.parentNode.removeChild(element);
         display == "none" && (display = "block");
         elementDisplay[nodeName] = display;
@@ -1143,7 +1143,7 @@
       show: function () {
         return this.each(function () {
           this.style.display == "none" && (this.style.display = '');
-          if (getComputedStyle(this, '').getPropertyValue("display") == "none") this.style.display = defaultDisplay(this.nodeName);
+          if (window.getComputedStyle(this, '').getPropertyValue("display") == "none") this.style.display = defaultDisplay(this.nodeName);
         });
       },
       replaceWith: function (newContent) {
@@ -1290,11 +1290,11 @@
 
           if (typeof property == 'string') {
             if (!element) return;
-            return element.style[camelize(property)] || getComputedStyle(element, '').getPropertyValue(property);
+            return element.style[camelize(property)] || window.getComputedStyle(element, '').getPropertyValue(property);
           } else if (isArray(property)) {
             if (!element) return;
             var props = {};
-            var computedStyle = getComputedStyle(element, '');
+            var computedStyle = window.getComputedStyle(element, '');
             $.each(property, function (_, prop) {
               props[prop] = element.style[camelize(prop)] || computedStyle.getPropertyValue(prop);
             });
@@ -2415,19 +2415,19 @@
   (function () {
     // getComputedStyle shouldn't freak out when called
     // without a valid element as argument
-    try {
-      getComputedStyle(undefined);
-    } catch (e) {
-      var nativeGetComputedStyle = getComputedStyle;
+    // try {
+    //   getComputedStyle(undefined);
+    // } catch (e) {
+    //   var nativeGetComputedStyle = getComputedStyle;
 
-      window.getComputedStyle = function (element, pseudoElement) {
-        try {
-          return nativeGetComputedStyle(element, pseudoElement);
-        } catch (e) {
-          return null;
-        }
-      };
-    }
+    //   window.getComputedStyle = function (element, pseudoElement) {
+    //     try {
+    //       return nativeGetComputedStyle(element, pseudoElement);
+    //     } catch (e) {
+    //       return null;
+    //     }
+    //   };
+    // }
   })();
 
   (function ($) {
@@ -2792,7 +2792,7 @@
       var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
       return !!fo;
     } catch (e) {
-      return !!(navigator.mimeTypes && navigator.mimeTypes['application/x-shockwave-flash'] !== undefined && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin);
+      return !!(window.navigator.mimeTypes && window.navigator.mimeTypes['application/x-shockwave-flash'] !== undefined && window.navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin);
     }
   };
 
@@ -2822,7 +2822,7 @@
       parts.splice(2, 1, extra[1]);
     }
 
-    parts = parts[2] ? [parts[1], parts[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    parts = parts[2] ? [parts[1], parts[2]] : [window.navigator.appName, window.navigator.appVersion, '-?'];
     return {
       name: parts[0],
       version: parseInt(parts[1])
@@ -2953,22 +2953,22 @@
     var device = matches && (matches[1] || matches[2]) || '';
     return device;
   };
-  var browserInfo = getBrowserInfo(navigator.userAgent);
-  Browser.isEdge = /edge/i.test(navigator.userAgent);
-  Browser.isChrome = /chrome|CriOS/i.test(navigator.userAgent) && !Browser.isEdge;
-  Browser.isSafari = /safari/i.test(navigator.userAgent) && !Browser.isChrome && !Browser.isEdge;
-  Browser.isFirefox = /firefox/i.test(navigator.userAgent);
+  var browserInfo = getBrowserInfo(window.navigator.userAgent);
+  Browser.isEdge = /edge/i.test(window.navigator.userAgent);
+  Browser.isChrome = /chrome|CriOS/i.test(window.navigator.userAgent) && !Browser.isEdge;
+  Browser.isSafari = /safari/i.test(window.navigator.userAgent) && !Browser.isChrome && !Browser.isEdge;
+  Browser.isFirefox = /firefox/i.test(window.navigator.userAgent);
   Browser.isLegacyIE = !!window.ActiveXObject;
-  Browser.isIE = Browser.isLegacyIE || /trident.*rv:1\d/i.test(navigator.userAgent);
-  Browser.isIE11 = /trident.*rv:11/i.test(navigator.userAgent);
-  Browser.isChromecast = Browser.isChrome && /CrKey/i.test(navigator.userAgent);
-  Browser.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|IEMobile|Mobile Safari|Opera Mini/i.test(navigator.userAgent);
-  Browser.isiOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
-  Browser.isAndroid = /Android/i.test(navigator.userAgent);
-  Browser.isWindowsPhone = /Windows Phone/i.test(navigator.userAgent);
-  Browser.isWin8App = /MSAppHost/i.test(navigator.userAgent);
-  Browser.isWiiU = /WiiU/i.test(navigator.userAgent);
-  Browser.isPS4 = /PlayStation 4/i.test(navigator.userAgent);
+  Browser.isIE = Browser.isLegacyIE || /trident.*rv:1\d/i.test(window.navigator.userAgent);
+  Browser.isIE11 = /trident.*rv:11/i.test(window.navigator.userAgent);
+  Browser.isChromecast = Browser.isChrome && /CrKey/i.test(window.navigator.userAgent);
+  Browser.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|IEMobile|Mobile Safari|Opera Mini/i.test(window.navigator.userAgent);
+  Browser.isiOS = /iPad|iPhone|iPod/i.test(window.navigator.userAgent);
+  Browser.isAndroid = /Android/i.test(window.navigator.userAgent);
+  Browser.isWindowsPhone = /Windows Phone/i.test(window.navigator.userAgent);
+  Browser.isWin8App = /MSAppHost/i.test(window.navigator.userAgent);
+  Browser.isWiiU = /WiiU/i.test(window.navigator.userAgent);
+  Browser.isPS4 = /PlayStation 4/i.test(window.navigator.userAgent);
   Browser.hasLocalstorage = hasLocalstorage();
   Browser.hasFlash = hasFlash();
   /**
@@ -2985,7 +2985,7 @@
   */
 
   Browser.version = browserInfo.version;
-  Browser.userAgent = navigator.userAgent;
+  Browser.userAgent = window.navigator.userAgent;
   Browser.data = getBrowserData();
   Browser.os = getOsData();
   Browser.viewport = getViewportSize();
@@ -11270,7 +11270,7 @@
         var timeout = 2000;
         var mousePointerMoved = event && event.clientX !== this.lastMouseX && event.clientY !== this.lastMouseY;
 
-        if (!event || mousePointerMoved || navigator.userAgent.match(/firefox/i)) {
+        if (!event || mousePointerMoved || window.navigator.userAgent.match(/firefox/i)) {
           clearTimeout(this.hideId);
           this.$el.show();
           this.trigger(Events.MEDIACONTROL_SHOW, this.name);
@@ -13970,7 +13970,7 @@
     adtsChanelConfig,
         // :int
     config,
-        userAgent = navigator.userAgent.toLowerCase(),
+        userAgent = window.navigator.userAgent.toLowerCase(),
         manifestCodec = audioCodec,
         adtsSampleingRates = [96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350]; // byte 2
 
@@ -16938,7 +16938,7 @@
       this.ISGenerated = false;
 
       if (chromeVersion === null) {
-        var result = navigator.userAgent.match(/Chrome\/(\d+)/i);
+        var result = window.navigator.userAgent.match(/Chrome\/(\d+)/i);
         chromeVersion = result ? parseInt(result[1]) : 0;
       }
     }
@@ -17395,7 +17395,7 @@
       track.nbNalu = 0;
       track.dropped = 0;
 
-      if (outputSamples.length && navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+      if (outputSamples.length && window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
         var flags = outputSamples[0].flags; // chrome workaround, mark first sample as being a Random Access Point to avoid sourcebuffer append issue
         // https://code.google.com/p/chromium/issues/detail?id=229412
 
@@ -17902,7 +17902,7 @@
     now = global.performance.now.bind(global.performance);
   } catch (err) {
     logger["logger"].debug('Unable to use Performance API on this environment');
-    now = global.Date.now;
+    // now = global.performance.now;
   }
 
   var demuxer_inline_DemuxerInline = /*#__PURE__*/function () {
@@ -21817,7 +21817,7 @@
       }; // navigator.vendor is not always available in Web Worker
       // refer to https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/navigator
 
-      var vendor = navigator.vendor;
+      var vendor = window.navigator.vendor;
 
       if (config.enableWorker && typeof Worker !== 'undefined') {
         logger["logger"].log('demuxing in webworker');
@@ -24058,7 +24058,7 @@
 
         if (track) {
           var audioCodec = this.levels[this.level].audioCodec,
-              ua = navigator.userAgent.toLowerCase();
+              ua = window.navigator.userAgent.toLowerCase();
 
           if (audioCodec && this.audioCodecSwap) {
             logger["logger"].log('swapping playlist audio codec');
@@ -24671,7 +24671,7 @@
       _this.currentLevelIndex = null;
       _this.manualLevelIndex = -1;
       _this.timer = null;
-      chromeOrFirefox = /chrome|firefox/.test(navigator.userAgent.toLowerCase());
+      chromeOrFirefox = /chrome|firefox/.test(window.navigator.userAgent.toLowerCase());
       return _this;
     }
 
@@ -29394,7 +29394,7 @@
         // also, drop line 1 since it's to close to the top
 
 
-        if (navigator.userAgent.match(/Firefox\//)) {
+        if (window.navigator.userAgent.match(/Firefox\//)) {
           cue.line = r + 1;
         } else {
           cue.line = r > 7 ? r - 2 : r + 1;
